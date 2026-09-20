@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatPrice } from "@/lib/format";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 type ProductCardProps = {
   product: {
@@ -22,7 +24,8 @@ export function ProductCard({ product }: ProductCardProps) {
     : null;
 
   return (
-    <Link
+    <Card className="group overflow-hidden transition-shadow hover:shadow-md">
+      <Link
       href={`/products/${product.slug}`}
       className="group overflow-hidden rounded-sm border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
     >
@@ -35,12 +38,12 @@ export function ProductCard({ product }: ProductCardProps) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         {discount && (
-          <span className="absolute right-0 top-0 bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground">
+          <Badge className="absolute right-0 top-0 rounded-none">
             -{discount}%
-          </span>
+          </Badge>
         )}
       </div>
-      <div className="space-y-2 p-3">
+      <CardContent className="space-y-2 p-3">
         <p className="truncate text-xs text-muted-foreground">{product.category.name}</p>
         <h3 className="line-clamp-2 min-h-10 text-sm text-card-foreground">
           {product.name}
@@ -55,7 +58,8 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
         </div>
-      </div>
-    </Link>
+      </CardContent>
+      </Link>
+    </Card>
   );
 }

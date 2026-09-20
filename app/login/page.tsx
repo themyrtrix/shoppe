@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default async function LoginPage({
   searchParams,
@@ -11,15 +14,17 @@ export default async function LoginPage({
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-9rem)] w-full max-w-md items-center px-4 py-10">
-      <section className="w-full rounded-md border border-border bg-card p-6 shadow-sm sm:p-8">
-        <Link href="/" className="text-sm font-semibold text-primary hover:underline">← Back to Shoppe</Link>
+      <Card className="w-full">
+        <CardContent className="p-6 sm:p-8">
+        <Link href="/" className={buttonVariants({ variant: "link", className: "px-0" })}>← Back to Shoppe</Link>
         <h1 className="mt-6 text-2xl font-bold">Welcome back</h1>
         <p className="mt-1 mb-6 text-sm text-muted-foreground">Sign in to continue shopping.</p>
         {params.registered === "1" && (
-          <p className="mb-4 rounded-sm bg-primary/10 p-3 text-sm text-primary">Account created. You can now sign in.</p>
+          <Alert className="mb-4"><AlertDescription>Account created. You can now sign in.</AlertDescription></Alert>
         )}
         <LoginForm callbackUrl={callbackUrl} />
-      </section>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 type CategoryGridProps = {
   categories: Array<{ name: string; slug: string; image: string | null }>;
@@ -9,6 +10,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
       {categories.map((category) => (
+        <Card key={category.slug} className="group min-h-24 shadow-sm hover:border-primary">
         <Link
           key={category.slug}
           href={`/products?category=${category.slug}`}
@@ -33,6 +35,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
             {category.name}
           </span>
         </Link>
+        </Card>
       ))}
     </div>
   );

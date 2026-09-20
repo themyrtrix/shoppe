@@ -1,7 +1,5 @@
 import { prisma } from "@/lib/prisma";
 
-export { formatPrice } from "@/lib/format";
-
 export async function getHomeCatalog() {
   const [categories, flashSaleProducts, products] = await Promise.all([
     prisma.category.findMany({

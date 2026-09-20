@@ -6,8 +6,9 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/layout/button";
-import { Input } from "@/components/layout/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 
 export function LoginForm({ callbackUrl = "/" }: { callbackUrl?: string }) {
@@ -41,14 +42,14 @@ export function LoginForm({ callbackUrl = "/" }: { callbackUrl?: string }) {
   return (
     <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <div className="space-y-1.5">
-        <label htmlFor="login-email" className="text-sm font-medium">Email</label>
+        <Label htmlFor="login-email">Email</Label>
         <Input id="login-email" type="email" autoComplete="email" {...form.register("email")} />
         {form.formState.errors.email && (
           <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
         )}
       </div>
       <div className="space-y-1.5">
-        <label htmlFor="login-password" className="text-sm font-medium">Password</label>
+        <Label htmlFor="login-password">Password</Label>
         <Input id="login-password" type="password" autoComplete="current-password" {...form.register("password")} />
         {form.formState.errors.password && (
           <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>

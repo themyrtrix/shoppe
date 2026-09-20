@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ProductGrid } from "@/components/catalog/product-grid";
+import { SortSelect } from "@/components/catalog/sort-select";
 import { prisma } from "@/lib/prisma";
 
 type ProductsPageProps = {
@@ -127,19 +128,15 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       </div>
 
       <div className="flex justify-end">
-        <form action="/products" method="get">
-          {query && <input type="hidden" name="q" value={query} />}
-          {categorySlug && <input type="hidden" name="category" value={categorySlug} />}
-          {isFlashSale && <input type="hidden" name="flashSale" value="true" />}
-          <label className="flex items-center gap-2 text-sm text-muted-foreground">
-            Sort by
-            <select name="sort" defaultValue={sort} className="rounded-sm border border-border bg-card px-3 py-2 text-foreground">
-              <option value="newest">Newest</option>
-              <option value="price-asc">Price: Low to high</option>
-              <option value="price-desc">Price: High to low</option>
-            </select>
-          </label>
-        </form>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span>Sort by</span>
+          <SortSelect
+            value={sort}
+            query={query}
+            categorySlug={categorySlug}
+            isFlashSale={isFlashSale}
+          />
+        </div>
       </div>
 
       <ProductGrid products={pagedProducts} />

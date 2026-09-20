@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Search, ShoppingCart } from "lucide-react";
 import { auth } from "@/auth";
-import { Button } from "@/components/layout/button";
-import { Input } from "@/components/layout/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { CartBadge } from "@/components/cart/cart-badge";
 
@@ -42,10 +42,10 @@ export default async function Header() {
         <nav className="flex shrink-0 items-center gap-1 sm:gap-3" aria-label="Account">
           <Link
             href="/cart"
-            className="relative rounded-full p-2 hover:bg-black/10"
+            className="relative"
             aria-label="Shopping cart"
           >
-            <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
+            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-black/10 hover:text-primary-foreground"><ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" /></Button>
             <CartBadge />
           </Link>
           {session?.user ? (

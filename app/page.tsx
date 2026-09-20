@@ -3,6 +3,8 @@ import Link from "next/link";
 import { CategoryGrid } from "@/components/catalog/category-grid";
 import { ProductGrid } from "@/components/catalog/product-grid";
 import { getHomeCatalog } from "@/lib/data/catalog";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function Home() {
   const { categories, flashSaleProducts, products } = await getHomeCatalog();
@@ -20,12 +22,7 @@ export default async function Home() {
           <p className="mt-4 max-w-lg text-sm text-white/85 sm:text-base">
             Discover useful things for your home, style, hobbies, and everyday life.
           </p>
-          <Link
-            href="#products"
-            className="mt-6 inline-flex h-10 items-center rounded-sm bg-white px-5 text-sm font-semibold text-primary hover:bg-white/90"
-          >
-            Shop now
-          </Link>
+          <Link href="#products" className={buttonVariants({ className: "mt-6 bg-white text-primary hover:bg-white/90" })}>Shop now</Link>
         </div>
         <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-white/10" />
         <div className="absolute -bottom-32 right-24 h-80 w-80 rounded-full bg-black/10" />
@@ -36,17 +33,17 @@ export default async function Home() {
         <CategoryGrid categories={categories} />
       </section>
 
-      <section className="overflow-hidden rounded-md border border-primary/20 bg-card shadow-sm">
-        <div className="flex items-center justify-between border-b border-border bg-primary/5 px-4 py-3 sm:px-5">
-          <h2 className="text-xl font-bold text-primary">Flash sale</h2>
+      <Card className="overflow-hidden border-primary/20">
+        <CardHeader className="flex-row items-center justify-between bg-primary/5 px-4 py-3 sm:px-5">
+          <CardTitle className="text-xl text-primary">Flash sale</CardTitle>
           <Link href="/products?flashSale=true" className="text-sm font-medium text-primary hover:underline">
             View all
           </Link>
-        </div>
-        <div className="p-4 sm:p-5">
+        </CardHeader>
+        <CardContent className="p-4 sm:p-5">
           <ProductGrid products={flashSaleProducts} />
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
       <section id="products" className="space-y-4">
         <div className="flex items-end justify-between">

@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/layout/button";
-import { Input } from "@/components/layout/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 
 export function RegisterForm() {
@@ -42,21 +43,21 @@ export function RegisterForm() {
   return (
     <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <div className="space-y-1.5">
-        <label htmlFor="register-name" className="text-sm font-medium">Name</label>
+        <Label htmlFor="register-name">Name</Label>
         <Input id="register-name" autoComplete="name" {...form.register("name")} />
         {form.formState.errors.name && (
           <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
         )}
       </div>
       <div className="space-y-1.5">
-        <label htmlFor="register-email" className="text-sm font-medium">Email</label>
+        <Label htmlFor="register-email">Email</Label>
         <Input id="register-email" type="email" autoComplete="email" {...form.register("email")} />
         {form.formState.errors.email && (
           <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
         )}
       </div>
       <div className="space-y-1.5">
-        <label htmlFor="register-password" className="text-sm font-medium">Password</label>
+        <Label htmlFor="register-password">Password</Label>
         <Input id="register-password" type="password" autoComplete="new-password" {...form.register("password")} />
         {form.formState.errors.password && (
           <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
