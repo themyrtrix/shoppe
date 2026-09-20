@@ -1,0 +1,19 @@
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { formatPrice } from "@/lib/format";
+import { notifyCartUpdated } from "@/components/cart/cart-badge";
+
+type Item = { id: string; quantity: number; variant: { id: string; name: string; stock: number; priceCents: number | null; product: { name: string; slug: string; images: string[]; priceCents: number } } };
+export function CartView() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [error, setError] = useState("");
+  async function load() { const response = await fetch("/api/cart"); const body = await response.json(); setItems(body.items ?? []); notifyCartUpdated(); }
+  // Cart data is an external resource and is loaded once after hydration.
+  useEffect(() => { void load(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
+  async function update(variantId: string, quantity: number) { const response = await fetch("/api/cart", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ variantId, quantity }) }); const body = await response.json(); if (!response.ok) setError(body.error); else { setItems(body.items ?? []); notifyCartUpdated(); } }
+  const subtotal = items.reduce((sum, item) => sum + (item.variant.priceCents ?? item.variant.product.priceCents) * item.quantity, 0);
+  return <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"><h1 className="text-2xl font-bold">Shopping cart</h1>{error && <p className="mt-3 text-sm text-destructive">{error}</p>}{!items.length ? <div className="mt-10 rounded border border-border bg-card p-10 text-center"><p className="text-muted-foreground">Your cart is empty.</p><Link href="/products" className="mt-4 inline-block rounded bg-primary px-5 py-2 font-semibold text-primary-foreground">Start shopping</Link></div> : <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]"><div className="divide-y divide-border rounded border border-border bg-card">{items.map((item) => { const price = item.variant.priceCents ?? item.variant.product.priceCents; return <div key={item.id} className="flex gap-4 p-4"><Image src={item.variant.product.images[0]} alt="" width={96} height={96} className="rounded object-cover" /><div className="min-w-0 flex-1"><Link href={`/products/${item.variant.product.slug}`} className="font-medium hover:text-primary">{item.variant.product.name}</Link><p className="text-sm text-muted-foreground">{item.variant.name}</p><p className="mt-2 font-semibold text-primary">{formatPrice(price)}</p><div className="mt-2 flex items-center gap-2"><button type="button" className="rounded border px-2" onClick={() => void update(item.variant.id, item.quantity - 1)}>−</button><span>{item.quantity}</span><button type="button" className="rounded border px-2" onClick={() => void update(item.variant.id, item.quantity + 1)}>+</button><button type="button" className="ml-3 text-sm text-destructive" onClick={() => void update(item.variant.id, 0)}>Remove</button></div></div><p className="font-semibold">{formatPrice(price * item.quantity)}</p></div>; })}</div><aside className="h-fit rounded border border-border bg-card p-5"><h2 className="font-semibold">Order summary</h2><div className="mt-4 flex justify-between"><span>Subtotal</span><span>{formatPrice(subtotal)}</span></div><div className="mt-2 flex justify-between text-sm text-muted-foreground"><span>Shipping</span><span>Calculated at checkout</span></div><div className="mt-4 flex justify-between border-t border-border pt-4 text-lg font-bold"><span>Total</span><span className="text-primary">{formatPrice(subtotal)}</span></div><Link href="/checkout" className="mt-5 block rounded bg-primary px-5 py-3 text-center font-semibold text-primary-foreground">Proceed to checkout</Link></aside></div>}</div>;
+}

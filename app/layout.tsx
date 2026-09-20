@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} min-h-screen flex flex-col antialiased`}>
         <Header />
-        <main className="flex-1">
+        <main className="flex-1 bg-background">
           {children}
         </main>
         <Footer />

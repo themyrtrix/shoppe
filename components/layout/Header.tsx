@@ -1,46 +1,68 @@
 import Link from "next/link";
 import { Search, ShoppingCart } from "lucide-react";
+import { auth } from "@/auth";
 import { Button } from "@/components/layout/button";
 import { Input } from "@/components/layout/input";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { CartBadge } from "@/components/cart/cart-badge";
 
-export default function Header() {
+export default async function Header() {
+  const session = await auth();
+
   return (
     <header className="sticky top-0 z-50 w-full bg-primary text-primary-foreground shadow-md">
-      <div className="container mx-auto flex h-20 items-center justify-between gap-4 px-4 md:gap-6">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <span className="text-2xl md:text-3xl font-bold tracking-tight">Shoppe</span>
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <Link href="/" className="shrink-0" aria-label="Shoppe home">
+          <span className="text-2xl font-bold tracking-tight sm:text-3xl">Shoppe</span>
         </Link>
 
-        {/* Search Bar */}
-        <div className="flex flex-1 items-center max-w-2xl">
-          <form className="flex w-full items-center bg-white rounded-sm overflow-hidden p-1 shadow-sm">
-            <Input 
-              type="text" 
-              placeholder="Search for products..." 
-              className="h-8 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-foreground rounded-none shadow-none"
-            />
-            <Button type="button" size="icon" className="h-8 w-12 rounded-sm bg-primary hover:bg-primary/90 shrink-0">
-              <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
-            </Button>
-          </form>
-        </div>
+        <form
+          action="/products"
+          method="get"
+          className="flex min-w-0 flex-1 items-center overflow-hidden rounded-sm bg-white p-1 shadow-sm"
+          role="search"
+        >
+          <Input
+            type="search"
+            name="q"
+            placeholder="Search for products..."
+            aria-label="Search for products"
+            className="h-8 rounded-none border-0 bg-transparent text-foreground shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+          <Button
+            type="submit"
+            size="icon"
+            aria-label="Search"
+            className="h-8 w-10 rounded-sm bg-primary hover:bg-primary/90 sm:w-12"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
+        </form>
 
-        {/* Actions (Cart & Login placeholder) */}
-        <div className="flex items-center gap-4 shrink-0">
-          <Link href="/cart" className="relative p-2 hover:bg-black/10 rounded-full transition-colors">
-            <ShoppingCart className="h-6 w-6" />
-            <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-white text-primary text-[10px] font-bold flex items-center justify-center">
-              0
-            </span>
+        <nav className="flex shrink-0 items-center gap-1 sm:gap-3" aria-label="Account">
+          <Link
+            href="/cart"
+            className="relative rounded-full p-2 hover:bg-black/10"
+            aria-label="Shopping cart"
+          >
+            <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
+            <CartBadge />
           </Link>
-          <div className="text-sm font-medium hidden md:flex items-center gap-2">
-            <Link href="/register" className="hover:text-white/80 transition-colors">Sign Up</Link>
-            <span className="border-l border-white/40 h-4" />
-            <Link href="/login" className="hover:text-white/80 transition-colors">Login</Link>
-          </div>
-        </div>
+          {session?.user ? (
+            <div className="hidden items-center gap-1 sm:flex">
+              <Link href="/account" className="max-w-32 truncate px-2 text-sm font-medium hover:text-white/80">
+                {session.user.name}
+              </Link>
+              <LogoutButton />
+            </div>
+          ) : (
+            <div className="hidden items-center gap-2 text-sm font-medium sm:flex">
+              <Link href="/register" className="hover:text-white/80">Sign Up</Link>
+              <span className="h-4 border-l border-white/40" aria-hidden="true" />
+              <Link href="/login" className="hover:text-white/80">Login</Link>
+            </div>
+          )}
+        </nav>
       </div>
     </header>
   );
